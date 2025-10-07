@@ -1,0 +1,23 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.nav-left a,
+.nav-right a {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: #333;
+}
+
+.nav-left a:last-child,
+.nav-right a:last-child {
+  margin-right: 0;
+}
+
+.site-title {
+  font-weight: bold;
+}
