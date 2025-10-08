@@ -23,8 +23,8 @@ const BlogPostList: React.FC = () => {
     fetchPosts();
   }, []);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (timestamp: { secs_since_epoch: number; nanos_since_epoch: number }) => {
+    const date = new Date(timestamp.secs_since_epoch * 1000);
     return date.toLocaleDateString('zh-TW', {
       year: 'numeric',
       month: 'long',
