@@ -4,7 +4,7 @@ import Whoami from './pages/Whoami';
 import BlogPostList from './pages/BlogPostList';
 import BlogPost from './pages/BlogPost';
 import Layout from './components/Layout';
-import './App.css';
+import './styles/App.css';
 
 function App() {
   return (
