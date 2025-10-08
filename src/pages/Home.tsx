@@ -1,91 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../services/api';
-import type { Post } from '../services/api';
 
 const HomePage: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-
-  useEffect(() => {
-    loadPosts();
-  }, []);
-
-  const loadPosts = async () => {
-    try {
-      setLoading(true);
-      const newPosts = await api.getPosts(page, 10);
-      
-      if (newPosts.length === 0) {
-        setHasMore(false);
-      } else {
-        setPosts(prev => [...prev, ...newPosts]);
-        setPage(prev => prev + 1);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load posts');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('zh-TW', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  if (error && posts.length === 0) {
-    return (
-      <div>
-        <h1>Blog Posts</h1>
-        <p style={{ color: 'red' }}>Error: {error}</p>
-      </div>
-    );
-  }
-
   return (
     <div>
-      <h1>Blog Posts</h1>
+      <h1>歡迎來到我的網站</h1>
       
-      {posts.length === 0 && !loading ? (
-        <p>No posts yet.</p>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          {posts.map(post => (
-            <article key={post.uuid} style={{ 
-              borderBottom: '1px solid #eaeaea', 
-              paddingBottom: '1.5rem' 
-            }}>
-              <h2>
-                <Link to={`/posts/${post.uuid}`}>{post.title}</Link>
-              </h2>
-              <time style={{ color: '#666', fontSize: '0.9rem' }}>
-                {formatDate(post.created_at)}
-              </time>
-              <p style={{ marginTop: '0.5rem', color: '#555' }}>
-                {post.content.substring(0, 200)}...
-              </p>
-            </article>
-          ))}
-        </div>
-      )}
+      <section style={{ marginTop: '2rem' }}>
+        <h2>最近在做什麼？</h2>
+        <p>這裡可以放置你最近的動態、正在進行的專案，或是想要特別展示的內容。</p>
+      </section>
 
-      {hasMore && (
-        <button 
-          onClick={loadPosts} 
-          disabled={loading}
-          style={{ marginTop: '2rem' }}
-        >
-          {loading ? 'Loading...' : 'Load More'}
-        </button>
-      )}
+      <section style={{ marginTop: '2rem' }}>
+        <h2>精選文章</h2>
+        <p>可以在這裡放一些精選的文章連結</p>
+        <Link to="/posts">查看所有文章 →</Link>
+      </section>
+
+      <section style={{ marginTop: '2rem' }}>
+        <h2>關於我</h2>
+        <p>簡短的自我介紹，詳細內容可以連到 <Link to="/whoami">whoami</Link> 頁面</p>
+      </section>
     </div>
   );
 };

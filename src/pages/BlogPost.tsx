@@ -47,7 +47,7 @@ const BlogPost: React.FC = () => {
     return (
       <div>
         <p style={{ color: 'red' }}>Error: {error}</p>
-        <Link to="/">← Back to posts</Link>
+        <Link to="/posts">← Back to posts</Link>
       </div>
     );
   }
@@ -56,14 +56,14 @@ const BlogPost: React.FC = () => {
     return (
       <div>
         <p>Post not found</p>
-        <Link to="/">← Back to posts</Link>
+        <Link to="/posts">← Back to posts</Link>
       </div>
     );
   }
 
   return (
     <article>
-      <Link to="/" style={{ display: 'inline-block', marginBottom: '1rem' }}>
+      <Link to="/posts" style={{ display: 'inline-block', marginBottom: '1rem' }}>
         ← Back to posts
       </Link>
       

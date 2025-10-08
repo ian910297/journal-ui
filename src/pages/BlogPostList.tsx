@@ -7,21 +7,43 @@ const BlogPostList: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const data = await api.getPosts(1, 100);
-        setPosts(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load posts');
-      } finally {
-        setLoading(false);
-      }
-    };
+    // 重置狀態並載入第一頁
+    setPosts([]);
+    setPage(1);
+    setHasMore(true);
+    loadPosts(1);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    fetchPosts();
-  }, []);
+  const loadPosts = async (pageNum: number = page) => {
+    try {
+      setLoading(true);
+      const newPosts = await api.getPosts(pageNum, 10);
+      
+      if (newPosts.length === 0) {
+        setHasMore(false);
+      } else {
+        setPosts(prev => {
+          // 使用 Map 來去重，確保不會有重複的 uuid
+          const postMap = new Map(prev.map(p => [p.uuid, p]));
+          newPosts.forEach(p => postMap.set(p.uuid, p));
+          return Array.from(postMap.values());
+        });
+        setPage(pageNum + 1);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load posts');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    loadPosts(page);
+  };
 
   const formatDate = (timestamp: { secs_since_epoch: number; nanos_since_epoch: number }) => {
     const date = new Date(timestamp.secs_since_epoch * 1000);
@@ -32,16 +54,7 @@ const BlogPostList: React.FC = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <div>
-        <h1>Blog Posts</h1>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  if (error) {
+  if (error && posts.length === 0) {
     return (
       <div>
         <h1>Blog Posts</h1>
@@ -53,21 +66,38 @@ const BlogPostList: React.FC = () => {
   return (
     <div>
       <h1>Blog Posts</h1>
-      {posts.length === 0 ? (
-        <p>No posts available.</p>
+      
+      {posts.length === 0 && !loading ? (
+        <p>No posts yet.</p>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {posts.map(post => (
-            <li key={post.uuid} style={{ marginBottom: '1.5rem' }}>
-              <Link to={`/posts/${post.uuid}`} style={{ fontSize: '1.2rem' }}>
-                {post.title}
-              </Link>
-              <div style={{ color: '#666', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+            <article key={post.uuid} style={{ 
+              borderBottom: '1px solid #eaeaea', 
+              paddingBottom: '1.5rem' 
+            }}>
+              <h2>
+                <Link to={`/posts/${post.uuid}`}>{post.title}</Link>
+              </h2>
+              <time style={{ color: '#666', fontSize: '0.9rem' }}>
                 {formatDate(post.created_at)}
-              </div>
-            </li>
+              </time>
+              <p style={{ marginTop: '0.5rem', color: '#555' }}>
+                {post.content.substring(0, 200)}...
+              </p>
+            </article>
           ))}
-        </ul>
+        </div>
+      )}
+
+      {hasMore && (
+        <button 
+          onClick={handleLoadMore} 
+          disabled={loading}
+          style={{ marginTop: '2rem' }}
+        >
+          {loading ? 'Loading...' : 'Load More'}
+        </button>
       )}
     </div>
   );
