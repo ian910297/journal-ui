@@ -1,0 +1,38 @@
+.
+├── Dockerfile
+├── LICENSE
+├── README.md
+├── eslint.config.js
+├── index.html
+├── nginx.conf
+├── package-lock.json
+├── package.json
+├── project_structure.txt
+├── public
+│   └── vite.svg
+├── src
+│   ├── App.tsx
+│   ├── assets
+│   │   └── react.svg
+│   ├── components
+│   │   ├── Layout.tsx
+│   │   ├── Navbar.tsx
+│   │   └── Sidebar.tsx
+│   ├── main.tsx
+│   ├── pages
+│   │   ├── BlogPost.tsx
+│   │   ├── BlogPostList.tsx
+│   │   ├── Home.tsx
+│   │   └── Whoami.tsx
+│   └── styles
+│       ├── App.css
+│       ├── Layout.css
+│       ├── Navbar.css
+│       ├── Sidebar.css
+│       └── index.css
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
+7 directories, 29 files
