@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/vs2015.css'; // 深色主題
 import { useParams, Link } from 'react-router-dom';
 import { api } from '../services/api';
 import type { Post } from '../services/api';
@@ -74,7 +77,12 @@ const BlogPost: React.FC = () => {
       </time>
       
       <div style={{ lineHeight: '1.7' }}>
-        <ReactMarkdown>{post.content}</ReactMarkdown>
+        <ReactMarkdown 
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeHighlight]}
+        >
+          {post.content}
+        </ReactMarkdown>
       </div>
     </article>
   );
